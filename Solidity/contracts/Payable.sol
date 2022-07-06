@@ -13,8 +13,21 @@ contract MyPayable{
 
     function getThisAccountBalance() public view returns(uint256){
             uint amount = address(this).balance;
-            return amount;
-            
+            return amount;       
+    }
+    function transferETH(address payable _user) public payable{
+        _user.transfer(msg.value);
+    }
+    function sendETH(address payable _user) public payable{
+        bool didsend = _user.send(msg.value);
+        require(didsend, "This failed to send");
+    }
+    function callETH(address payable _user) public payable{
+        (bool didsend, ) = _user.call{value:msg.value}("");
+        require(didsend, "This is failed");
     }
 
+    receive() external payable{}
+    fallback() external payable{}
+    
 }
